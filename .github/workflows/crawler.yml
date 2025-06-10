@@ -37,7 +37,7 @@ jobs:
     
     - name: Generate marketing strategy
       run: |
-        cd crawler
+        cd data/crawler
         python strategy.py
     
     - name: Check generated files
