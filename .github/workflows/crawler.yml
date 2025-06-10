@@ -1,0 +1,61 @@
+name: Daily Review Crawler
+
+on:
+  schedule:
+    # 매일 오전 9시 (UTC 0시) 실행
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 수동 실행 가능
+  push:
+    branches: [ main ]  # main 브랜치에 push 될 때도 실행
+
+jobs:
+  crawl-reviews:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install Python dependencies
+      run: |
+        pip install requests beautifulsoup4 lxml
+    
+    - name: Create data directories
+      run: |
+        mkdir -p data/reviews
+        mkdir -p data/strategies
+    
+    - name: Run crawler
+      run: |
+        cd crawler
+        python fixed_iframe_crawler.py
+    
+    - name: Generate marketing strategy
+      run: |
+        cd crawler
+        python strategy.py
+    
+    - name: Check generated files
+      run: |
+        echo "=== Generated files ==="
+        ls -la data/reviews/
+        ls -la data/strategies/
+        echo "=== Review file content preview ==="
+        head -20 data/reviews/*.json || echo "No review files found"
+    
+    - name: Commit and push results
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Update reviews and strategy $(date)"
+          git push
+        fi
