@@ -1,6 +1,5 @@
 # crawler/gemini_api.py - Gemini AI 마케팅 전략 생성
 import os
-os.environ['GEMINI_API_KEY'] = 'AIzaSyCS5rtz0StCZDQisRNNtS_bMkUu8pFyPHw'
 import json
 import requests
 from datetime import datetime
