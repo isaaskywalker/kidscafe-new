@@ -32,7 +32,7 @@ jobs:
     
     - name: Run crawler
       run: |
-        cd crawler
+        cd data/crawler
         python fixed_iframe_crawler.py
     
     - name: Generate marketing strategy
