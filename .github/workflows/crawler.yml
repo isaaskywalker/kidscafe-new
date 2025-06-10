@@ -40,7 +40,7 @@ jobs:
     - name: Generate marketing strategy
       run: |
         cd data/crawler
-        python strategy.py
+        python gemini_api.py
     
     - name: Check generated files
       run: |
